@@ -1,12 +1,14 @@
-import React from "react";
+import React from 'react';
+import { useCart } from '../context/CartContext';
 
-const ProductCard = ({ product, addToCart }) => {
+const ProductCard = ({ product }) => {
+  const { addToCart } = useCart();
   const { name, description, price, images } = product;
 
   const imageUrl =
     images && images.length > 0
       ? images[0].secure_url
-      : "https://via.placeholder.com/400x300?text=No+Image";
+      : 'https://via.placeholder.com/400x300?text=No+Image';
 
   return (
     <div className="bg-white rounded-xl shadow-md p-4 flex flex-col h-[600px]">
@@ -17,10 +19,8 @@ const ProductCard = ({ product, addToCart }) => {
           className="w-full h-full bg-gray-100 object-cover object-top rounded-md"
         />
       </div>
-
       <h2 className="text-lg font-semibold">{name}</h2>
       <p className="text-sm text-gray-600 mb-2">{description}</p>
-
       <div className="flex items-center justify-between mt-auto">
         <button
           onClick={() => addToCart(product)}

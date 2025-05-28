@@ -1,21 +1,19 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Products from "./components/Products";
-import CartPage from "./components/ProductCard";
-import Banner from "./components/Banner";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Products from './components/Products';
+import Cart from './components/Cart';
+import Navbar from './components/Navbar';
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
-    <>
+    <CartProvider>
       <Navbar />
-      <Banner />
-      <Products/>
       <Routes>
         <Route path="/" element={<Products />} />
-        <Route path="/cart" element={<CartPage />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
-    </>
+    </CartProvider>
   );
 }
 
