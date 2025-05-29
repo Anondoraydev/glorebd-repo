@@ -11,6 +11,8 @@ function Navbar() {
   const [cartOpen, setCartOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [showSearchInput, setShowSearchInput] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
 
@@ -32,13 +34,25 @@ function Navbar() {
     navigate(`/products?subcategory=${encodeURIComponent(subCategory)}`);
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      setMenuOpen(false);
+      setShowSearchInput(false);
+      navigate(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm("");
+    }
+  };
+
   return (
     <div>
       {/* Navbar */}
-      <nav className={`z-50 w-full transition-all duration-300 ${isSticky
-        ? "fixed top-0 left-0 bg-white shadow-md"
-        : "relative bg-transparent"
-        }`}>
+      <nav
+        className={`z-50 w-full transition-all duration-300 ${isSticky
+          ? "fixed top-0 left-0 bg-white shadow-md"
+          : "relative bg-transparent"
+          }`}
+      >
         <div className="max-w-[1520px] mx-auto px-4">
           <div className="flex items-center justify-between text-black py-4 relative">
             {/* Left Icons */}
@@ -50,14 +64,17 @@ function Navbar() {
                 <RiMenu2Line className="text-2xl" />
                 <span className="text-sm">Menu</span>
               </div>
-              <div className="flex items-center gap-1 cursor-pointer">
+              <div
+                className="flex items-center gap-1 cursor-pointer"
+                onClick={() => setShowSearchInput((prev) => !prev)}
+              >
                 <FaSearch className="text-xl" />
                 <span className="text-sm">Search</span>
               </div>
             </div>
 
             {/* Logo */}
-            <Link to={'/'}>
+            <Link to={"/"}>
               <div className="text-2xl font-bold">MyShop</div>
             </Link>
 
@@ -83,12 +100,30 @@ function Navbar() {
               </div>
             </div>
           </div>
+
+          {/* Search Input Below Logo */}
+          {showSearchInput && (
+            <form
+              onSubmit={handleSearchSubmit}
+              className="mt-5 w-full max-w-xs bg-white border border-gray-300 rounded-md p-2 shadow-sm"
+            >
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </form>
+          )}
         </div>
       </nav>
 
       {/* Sidebar Menu */}
-      <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-md transform transition-transform duration-300 z-50 ${menuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}>
+      <div
+        className={`fixed top-0 left-0 h-full w-96 bg-white shadow-md transform transition-transform duration-300 z-50 ${menuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+      >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Menu</h2>
           <button
@@ -121,7 +156,9 @@ function Navbar() {
               </li>
               <li
                 className="cursor-pointer hover:underline"
-                onClick={() => handleCategoryFilter("Unstitched Party Dress")}
+                onClick={() =>
+                  handleCategoryFilter("Unstitched Party Dress")
+                }
               >
                 Unstitched Party Dress
               </li>
@@ -131,8 +168,10 @@ function Navbar() {
       </div>
 
       {/* Sidebar Cart */}
-      <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-md flex flex-col transition-transform duration-300 z-50 ${cartOpen ? "translate-x-0" : "translate-x-full"
-        }`}>
+      <div
+        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-md flex flex-col transition-transform duration-300 z-50 ${cartOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+      >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Cart</h2>
           <button
@@ -151,7 +190,10 @@ function Navbar() {
             cartItems.map((item) => (
               <div key={item._id} className="flex items-center gap-4">
                 <img
-                  src={item.image || "https://via.placeholder.com/100x100?text=No+Image"}
+                  src={
+                    item.image ||
+                    "https://via.placeholder.com/100x100?text=No+Image"
+                  }
                   alt={item.name}
                   className="w-full max-w-[100px] h-28 object-cover rounded-md"
                 />
@@ -223,6 +265,7 @@ function Navbar() {
           onClick={() => {
             setMenuOpen(false);
             setCartOpen(false);
+            setShowSearchInput(false);
           }}
         ></div>
       )}

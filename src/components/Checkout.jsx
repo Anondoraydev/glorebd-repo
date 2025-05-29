@@ -14,7 +14,7 @@ function Checkout() {
   };
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+    <div className="max-w-[1520px] mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-10">
       {/* Left: Cart Items */}
       <div className="bg-white p-6 rounded shadow">
         <h2 className="text-2xl font-bold mb-6">Your Order</h2>

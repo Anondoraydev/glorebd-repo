@@ -1,6 +1,7 @@
 // src/pages/ProductPage.jsx
 
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 
@@ -18,6 +19,10 @@ const ProductPage = () => {
     min: minPriceAllowed,
     max: maxPriceAllowed,
   });
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get("search")?.toLowerCase() || "";
 
   useEffect(() => {
     axios
@@ -45,6 +50,12 @@ const ProductPage = () => {
       (p) => p.price >= priceFilter.min && p.price <= priceFilter.max
     );
 
+    if (searchQuery) {
+      updated = updated.filter((p) =>
+        p.name?.toLowerCase().includes(searchQuery)
+      );
+    }
+
     if (sortOrder === "lowToHigh") {
       updated.sort((a, b) => a.price - b.price);
     } else if (sortOrder === "highToLow") {
@@ -52,7 +63,7 @@ const ProductPage = () => {
     }
 
     setFilteredProducts(updated);
-  }, [products, selectedSubCategories, priceFilter, sortOrder]);
+  }, [products, selectedSubCategories, priceFilter, sortOrder, searchQuery]);
 
   const handleMinChange = (e) => {
     const value = Math.min(Number(e.target.value), priceFilter.max);
@@ -92,7 +103,7 @@ const ProductPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
-      {/* Left Sidebar */}
+      {/* Sidebar */}
       <aside className="w-full md:w-[300px] max-h-[48vh] overflow-y-auto bg-pink-200 p-4 rounded shadow space-y-6 flex-shrink-0">
         {/* Subcategory Filter */}
         <div>
@@ -133,7 +144,6 @@ const ProductPage = () => {
         <div>
           <h2 className="text-lg font-semibold mb-3">Filter by Price</h2>
 
-          {/* Range Slider */}
           <div className="relative h-6 mb-4">
             <div
               className="absolute top-3 h-1 bg-blue-500 rounded"
@@ -151,7 +161,6 @@ const ProductPage = () => {
               onChange={handleMinChange}
               className="absolute w-full h-6 appearance-none bg-transparent z-10"
             />
-
             <input
               type="range"
               min={minPriceAllowed}
@@ -162,7 +171,6 @@ const ProductPage = () => {
             />
           </div>
 
-          {/* Min and Max Labels and Values in one line */}
           <div className="flex justify-between text-gray-800 font-medium text-sm">
             <div className="flex items-center space-x-2">
               <span>Min</span>
@@ -176,9 +184,8 @@ const ProductPage = () => {
         </div>
       </aside>
 
-      {/* Product List */}
+      {/* Main Content */}
       <main className="flex-1">
-        {/* Sort Dropdown */}
         <div className="flex justify-end mb-4">
           <select
             value={sortOrder}
