@@ -4,7 +4,7 @@ import { RiMenu2Line } from "react-icons/ri";
 import { GiShoppingBag } from "react-icons/gi";
 import { AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
 import { useCart } from "../context/CartContext";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,6 +12,7 @@ function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,16 +27,18 @@ function Navbar() {
     0
   );
 
+  const handleCategoryFilter = (subCategory) => {
+    setMenuOpen(false);
+    navigate(`/products?subcategory=${encodeURIComponent(subCategory)}`);
+  };
+
   return (
     <div>
       {/* Navbar */}
-      <nav
-        className={`z-50 w-full transition-all duration-300 ${isSticky
-          ? "fixed top-0 left-0 bg-white shadow-md"
-          : "relative bg-transparent"
-          }`}
-      >
-        {/* Centered container with max width */}
+      <nav className={`z-50 w-full transition-all duration-300 ${isSticky
+        ? "fixed top-0 left-0 bg-white shadow-md"
+        : "relative bg-transparent"
+        }`}>
         <div className="max-w-[1520px] mx-auto px-4">
           <div className="flex items-center justify-between text-black py-4 relative">
             {/* Left Icons */}
@@ -54,11 +57,13 @@ function Navbar() {
             </div>
 
             {/* Logo */}
-            <div className="text-2xl font-bold">MyShop</div>
+            <Link to={'/'}>
+              <div className="text-2xl font-bold">MyShop</div>
+            </Link>
 
             {/* Right Icons */}
             <div className="flex items-center gap-6">
-              <Link to={'productPage'}>
+              <Link to="/productPage">
                 <div className="flex items-center gap-1 cursor-pointer">
                   <GiShoppingBag className="text-2xl" />
                   <span className="text-sm">Shop</span>
@@ -82,10 +87,8 @@ function Navbar() {
       </nav>
 
       {/* Sidebar Menu */}
-      <div
-        className={`fixed top-0 left-0 h-full w-96 bg-white shadow-md transform transition-transform duration-300 z-50 ${menuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-      >
+      <div className={`fixed top-0 left-0 h-full w-96 bg-white shadow-md transform transition-transform duration-300 z-50 ${menuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}>
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Menu</h2>
           <button
@@ -104,9 +107,22 @@ function Navbar() {
           </button>
           {dropdownOpen && (
             <ul className="pl-6 mt-4 space-y-4 text-gray-700">
-              <li className="cursor-pointer hover:underline">Jamdhani Sharee</li>
-              <li className="cursor-pointer hover:underline">Three Pieces</li>
-              <li className="cursor-pointer hover:underline">
+              <li
+                className="cursor-pointer hover:underline"
+                onClick={() => handleCategoryFilter("Jamdhani Sharee")}
+              >
+                Jamdhani Sharee
+              </li>
+              <li
+                className="cursor-pointer hover:underline"
+                onClick={() => handleCategoryFilter("Three Pieces")}
+              >
+                Three Pieces
+              </li>
+              <li
+                className="cursor-pointer hover:underline"
+                onClick={() => handleCategoryFilter("Unstitched Party Dress")}
+              >
                 Unstitched Party Dress
               </li>
             </ul>
@@ -115,10 +131,8 @@ function Navbar() {
       </div>
 
       {/* Sidebar Cart */}
-      <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-md flex flex-col transition-transform duration-300 z-50 ${cartOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-      >
+      <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-md flex flex-col transition-transform duration-300 z-50 ${cartOpen ? "translate-x-0" : "translate-x-full"
+        }`}>
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Cart</h2>
           <button
@@ -137,24 +151,16 @@ function Navbar() {
             cartItems.map((item) => (
               <div key={item._id} className="flex items-center gap-4">
                 <img
-                  src={
-                    item.image ||
-                    "https://via.placeholder.com/100x100?text=No+Image"
-                  }
+                  src={item.image || "https://via.placeholder.com/100x100?text=No+Image"}
                   alt={item.name}
                   className="w-full max-w-[100px] h-28 object-cover rounded-md"
                 />
-
                 <div className="flex flex-col flex-grow text-left">
                   <h3 className="font-semibold text-lg">{item.name}</h3>
-
                   <div className="flex items-center gap-3 mt-2">
                     <button
                       onClick={() =>
-                        updateQuantity(
-                          item._id,
-                          item.quantity > 1 ? item.quantity - 1 : 1
-                        )
+                        updateQuantity(item._id, Math.max(1, item.quantity - 1))
                       }
                       className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
                     >
@@ -169,11 +175,9 @@ function Navbar() {
                     </button>
                   </div>
                 </div>
-
                 <div className="text-right font-bold text-blue-700 text-xl min-w-[80px]">
                   ৳ {item.price * item.quantity}
                 </div>
-
                 <button
                   onClick={() => removeFromCart(item._id)}
                   className="ml-2 text-red-600 hover:text-red-800"
@@ -200,7 +204,10 @@ function Navbar() {
               Clear All
             </button>
             <button
-              onClick={() => alert("Proceed to checkout")}
+              onClick={() => {
+                setCartOpen(false);
+                navigate("/checkout");
+              }}
               className="flex-grow bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
             >
               Checkout

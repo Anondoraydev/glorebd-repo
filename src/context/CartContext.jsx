@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
             image:
               product.images && product.images.length > 0
                 ? product.images[0].secure_url
-                : "",
+                : product.image || "",
           },
         ];
       }
@@ -49,6 +49,11 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => setCartItems([]);
 
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
   return (
     <CartContext.Provider
       value={{
@@ -59,6 +64,7 @@ export const CartProvider = ({ children }) => {
         clearCart,
         cartOpen,
         setCartOpen,
+        subtotal,
       }}
     >
       {children}
