@@ -6,6 +6,8 @@ import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-    <App />
+    <div className='bg-pink-200'>
+      <App />
+   </div>
   </BrowserRouter>
 );

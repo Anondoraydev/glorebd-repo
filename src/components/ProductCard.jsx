@@ -16,7 +16,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-4 flex flex-col h-[600px]">
+    <div className="bg-white rounded-xl shadow-md flex flex-col h-[650px]">
       <div
         className="flex-grow overflow-hidden rounded-md mb-3 cursor-pointer"
         onClick={handleImageClick}
@@ -24,21 +24,24 @@ const ProductCard = ({ product }) => {
         <img
           src={imageUrl}
           alt={product.name}
-          className="w-full h-full bg-gray-100 object-cover object-top rounded-md"
+          className="w-full h-full object-cover object-top rounded-md transform transition-transform duration-300 hover:scale-110"
         />
+
       </div>
 
-      <h2 className="text-lg font-semibold">{product.name}</h2>
-      <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+      <div className="p-4">
+        <h2 className="text-lg font-semibold">{product.name}</h2>
+        <p className="text-sm text-gray-600 mb-2">{product.description}</p>
 
-      <div className="flex items-center justify-between mt-auto">
-        <button
-          onClick={() => addToCart(product)}
-          className="bg-blue-500 text-white py-1.5 px-3 rounded hover:bg-blue-600 transition text-sm"
-        >
-          Add to Cart
-        </button>
-        <p className="text-blue-700 font-extrabold text-xl">৳ {product.price}</p>
+        <div className="flex items-center justify-between mt-auto">
+          <button
+            onClick={() => addToCart(product)}
+            className="bg-blue-500 text-white py-1.5 px-3 rounded hover:bg-blue-600 transition text-sm"
+          >
+            Add to Cart
+          </button>
+          <p className="text-blue-700 font-extrabold text-xl">৳ {product.price}</p>
+        </div>
       </div>
     </div>
   );

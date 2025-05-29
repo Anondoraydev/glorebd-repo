@@ -4,6 +4,7 @@ import { RiMenu2Line } from "react-icons/ri";
 import { GiShoppingBag } from "react-icons/gi";
 import { AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
 import { useCart } from "../context/CartContext";
+import { Link } from "react-router";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -26,7 +27,7 @@ function Navbar() {
   );
 
   return (
-    <div className="relative max-w-[1520px] mx-auto">
+    <div>
       {/* Navbar */}
       <nav
         className={`z-50 w-full transition-all duration-300 ${isSticky
@@ -34,42 +35,47 @@ function Navbar() {
           : "relative bg-transparent"
           }`}
       >
-        <div className="flex items-center justify-center text-black px-4 py-4">
-          {/* Left Icons */}
-          <div className="absolute left-4 flex items-center gap-6">
-            <div
-              className="flex items-center gap-1 cursor-pointer"
-              onClick={() => setMenuOpen(true)}
-            >
-              <RiMenu2Line className="text-2xl" />
-              <span className="text-sm">Menu</span>
+        {/* Centered container with max width */}
+        <div className="max-w-[1520px] mx-auto px-4">
+          <div className="flex items-center justify-between text-black py-4 relative">
+            {/* Left Icons */}
+            <div className="flex items-center gap-6">
+              <div
+                className="flex items-center gap-1 cursor-pointer"
+                onClick={() => setMenuOpen(true)}
+              >
+                <RiMenu2Line className="text-2xl" />
+                <span className="text-sm">Menu</span>
+              </div>
+              <div className="flex items-center gap-1 cursor-pointer">
+                <FaSearch className="text-xl" />
+                <span className="text-sm">Search</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1 cursor-pointer">
-              <FaSearch className="text-xl" />
-              <span className="text-sm">Search</span>
-            </div>
-          </div>
 
-          {/* Logo */}
-          <div className="text-2xl font-bold">MyShop</div>
+            {/* Logo */}
+            <div className="text-2xl font-bold">MyShop</div>
 
-          {/* Right Icons */}
-          <div className="absolute right-4 flex items-center gap-6">
-            <div className="flex items-center gap-1 cursor-pointer">
-              <GiShoppingBag className="text-2xl" />
-              <span className="text-sm">Shop</span>
-            </div>
-            <div
-              className="flex items-center gap-1 cursor-pointer relative"
-              onClick={() => setCartOpen(true)}
-            >
-              <FaShoppingCart className="text-2xl" />
-              <span className="text-sm">Cart</span>
-              {cartItems.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                  {cartItems.length}
-                </span>
-              )}
+            {/* Right Icons */}
+            <div className="flex items-center gap-6">
+              <Link to={'productPage'}>
+                <div className="flex items-center gap-1 cursor-pointer">
+                  <GiShoppingBag className="text-2xl" />
+                  <span className="text-sm">Shop</span>
+                </div>
+              </Link>
+              <div
+                className="flex items-center gap-1 cursor-pointer relative"
+                onClick={() => setCartOpen(true)}
+              >
+                <FaShoppingCart className="text-2xl" />
+                <span className="text-sm">Cart</span>
+                {cartItems.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                    {cartItems.length}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -129,10 +135,7 @@ function Navbar() {
             <p className="text-gray-600">Your cart is empty.</p>
           ) : (
             cartItems.map((item) => (
-              <div
-                key={item._id}
-                className="flex items-center gap-4"
-              >
+              <div key={item._id} className="flex items-center gap-4">
                 <img
                   src={
                     item.image ||
@@ -204,7 +207,6 @@ function Navbar() {
             </button>
           </div>
         </div>
-
       </div>
 
       {/* Overlay */}
