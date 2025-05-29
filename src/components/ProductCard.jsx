@@ -1,34 +1,44 @@
-import React from 'react';
-import { useCart } from '../context/CartContext';
+import React from "react";
+import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
-  const { name, description, price, images } = product;
+  const navigate = useNavigate();
 
   const imageUrl =
-    images && images.length > 0
-      ? images[0].secure_url
-      : 'https://via.placeholder.com/400x300?text=No+Image';
+    product.images && product.images.length > 0
+      ? product.images[0].secure_url
+      : "https://via.placeholder.com/400x300?text=No+Image";
+
+  const handleImageClick = () => {
+    navigate(`/product/${product._id}`);
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-md p-4 flex flex-col h-[600px]">
-      <div className="flex-grow overflow-hidden rounded-md mb-3">
+      <div
+        className="flex-grow overflow-hidden rounded-md mb-3 cursor-pointer"
+        onClick={handleImageClick}
+      >
         <img
           src={imageUrl}
-          alt={name}
+          alt={product.name}
           className="w-full h-full bg-gray-100 object-cover object-top rounded-md"
         />
       </div>
-      <h2 className="text-lg font-semibold">{name}</h2>
-      <p className="text-sm text-gray-600 mb-2">{description}</p>
+
+      <h2 className="text-lg font-semibold">{product.name}</h2>
+      <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+
       <div className="flex items-center justify-between mt-auto">
         <button
           onClick={() => addToCart(product)}
           className="bg-blue-500 text-white py-1.5 px-3 rounded hover:bg-blue-600 transition text-sm"
         >
-          অর্ডার করুন
+          Add to Cart
         </button>
-        <p className="text-blue-700 font-extrabold text-xl">৳ {price}</p>
+        <p className="text-blue-700 font-extrabold text-xl">৳ {product.price}</p>
       </div>
     </div>
   );

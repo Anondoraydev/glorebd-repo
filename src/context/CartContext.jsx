@@ -1,31 +1,66 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
 
   const addToCart = (product) => {
-    setCartItems((prev) => {
-      const exists = prev.find((item) => item._id === product._id);
+    setCartItems((prevItems) => {
+      const exists = prevItems.find((item) => item._id === product._id);
       if (exists) {
-        return prev.map((item) =>
-          item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+        return prevItems.map((item) =>
+          item._id === product._id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         );
       } else {
-        return [...prev, { ...product, quantity: 1 }];
+        return [
+          ...prevItems,
+          {
+            ...product,
+            quantity: 1,
+            image:
+              product.images && product.images.length > 0
+                ? product.images[0].secure_url
+                : "",
+          },
+        ];
       }
     });
+    setCartOpen(true);
+  };
+
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item._id === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
   };
 
   const removeFromCart = (productId) => {
-    setCartItems((prev) => prev.filter((item) => item._id !== productId));
+    setCartItems((prevItems) =>
+      prevItems.filter((item) => item._id !== productId)
+    );
   };
 
   const clearCart = () => setCartItems([]);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        clearCart,
+        cartOpen,
+        setCartOpen,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

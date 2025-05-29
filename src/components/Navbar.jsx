@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import { RiMenu2Line } from "react-icons/ri";
 import { GiShoppingBag } from "react-icons/gi";
-import { AiOutlineClose } from "react-icons/ai";
-import { useCart } from "../context/CartContext"; // Cart Context import
+import { AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
+import { useCart } from "../context/CartContext";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
-  const { cartItems } = useCart(); // cart items
+  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,11 +20,18 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
   return (
     <div className="relative max-w-[1520px] mx-auto">
       {/* Navbar */}
       <nav
-        className={`z-50 w-full transition-all duration-300 ${isSticky ? "fixed top-0 left-0 bg-white shadow-md" : "relative bg-transparent"
+        className={`z-50 w-full transition-all duration-300 ${isSticky
+          ? "fixed top-0 left-0 bg-white shadow-md"
+          : "relative bg-transparent"
           }`}
       >
         <div className="flex items-center justify-center text-black px-4 py-4">
@@ -93,7 +100,9 @@ function Navbar() {
             <ul className="pl-6 mt-4 space-y-4 text-gray-700">
               <li className="cursor-pointer hover:underline">Jamdhani Sharee</li>
               <li className="cursor-pointer hover:underline">Three Pieces</li>
-              <li className="cursor-pointer hover:underline">Unstitched Party Dress</li>
+              <li className="cursor-pointer hover:underline">
+                Unstitched Party Dress
+              </li>
             </ul>
           )}
         </div>
@@ -101,7 +110,7 @@ function Navbar() {
 
       {/* Sidebar Cart */}
       <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-md transform transition-transform duration-300 z-50 ${cartOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-md flex flex-col transition-transform duration-300 z-50 ${cartOpen ? "translate-x-0" : "translate-x-full"
           }`}
       >
         <div className="flex justify-between items-center p-4 border-b">
@@ -113,26 +122,89 @@ function Navbar() {
             <AiOutlineClose />
           </button>
         </div>
-        <div className="p-4 space-y-4 overflow-y-auto h-[calc(100%-64px)]">
+
+        {/* Cart Items List */}
+        <div className="p-4 space-y-4 overflow-y-auto flex-grow">
           {cartItems.length === 0 ? (
             <p className="text-gray-600">Your cart is empty.</p>
           ) : (
             cartItems.map((item) => (
               <div
                 key={item._id}
-                className="flex justify-between items-center border-b pb-2"
+                className="flex items-center gap-4"
               >
-                <div>
-                  <h3 className="font-semibold">{item.name}</h3>
-                  <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                <img
+                  src={
+                    item.image ||
+                    "https://via.placeholder.com/100x100?text=No+Image"
+                  }
+                  alt={item.name}
+                  className="w-full max-w-[100px] h-28 object-cover rounded-md"
+                />
+
+                <div className="flex flex-col flex-grow text-left">
+                  <h3 className="font-semibold text-lg">{item.name}</h3>
+
+                  <div className="flex items-center gap-3 mt-2">
+                    <button
+                      onClick={() =>
+                        updateQuantity(
+                          item._id,
+                          item.quantity > 1 ? item.quantity - 1 : 1
+                        )
+                      }
+                      className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
+                    >
+                      −
+                    </button>
+                    <span className="font-semibold">{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                      className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-                <p className="font-semibold text-blue-600">
+
+                <div className="text-right font-bold text-blue-700 text-xl min-w-[80px]">
                   ৳ {item.price * item.quantity}
-                </p>
+                </div>
+
+                <button
+                  onClick={() => removeFromCart(item._id)}
+                  className="ml-2 text-red-600 hover:text-red-800"
+                  aria-label="Remove item"
+                >
+                  <AiOutlineDelete size={24} />
+                </button>
               </div>
             ))
           )}
         </div>
+
+        {/* Subtotal & Actions */}
+        <div className="p-4 border-t border-gray-300">
+          <div className="flex justify-between font-semibold text-lg mb-4">
+            <span>Subtotal:</span>
+            <span>৳ {subtotal.toFixed(2)}</span>
+          </div>
+          <div className="flex gap-4">
+            <button
+              onClick={clearCart}
+              className="flex-grow bg-red-600 text-white py-2 rounded hover:bg-red-700 transition"
+            >
+              Clear All
+            </button>
+            <button
+              onClick={() => alert("Proceed to checkout")}
+              className="flex-grow bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            >
+              Checkout
+            </button>
+          </div>
+        </div>
+
       </div>
 
       {/* Overlay */}
