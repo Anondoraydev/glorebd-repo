@@ -72,7 +72,7 @@ const ProductDetails = () => {
         </div>
 
         {/* Details Section (Sticky) */}
-        <div className="md:flex-1 sticky top-0 self-start max-h-screen overflow-auto p-6 bg-white rounded shadow">
+        <div className="md:flex-1 sticky top-0 self-start max-h-screen overflow-auto p-6">
           <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
 
           {/* Rating */}
