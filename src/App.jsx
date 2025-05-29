@@ -1,11 +1,11 @@
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Products from './components/Products'; 
 import Navbar from './components/Navbar';
-import Banner from './components/Banner';
 import { CartProvider } from './context/CartContext';
 import ProductDetails from './components/ProductDetails';
 import ProductPage from './components/ProductPage';
+import Cart from './components/Cart';
+import Home from './components/Home';
 
 function App() {
   const location = useLocation();
@@ -13,13 +13,12 @@ function App() {
 
   return (
     <CartProvider>
-      {!hideNavbarAndBanner && <Navbar />} 
+      {!hideNavbarAndBanner && <Navbar />}
       <Routes>
-      
-        <Route path="/" element={< Banner />} />
-        <Route path="/" element={<Products />} />
+        <Route path="/" element={<Home />} />
         <Route path="/productPage" element={<ProductPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </CartProvider>
   );
