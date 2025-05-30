@@ -222,6 +222,7 @@ function Navbar() {
                 </div>
                 <button
                   onClick={() => removeFromCart(item._id)}
+                  
                   className="ml-2 text-red-600 hover:text-red-800"
                   aria-label="Remove item"
                 >
