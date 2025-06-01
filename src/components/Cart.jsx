@@ -9,7 +9,6 @@ const Cart = () => {
   if (cartItems.length === 0) {
     return <div className="text-center py-10 text-lg">আপনার কার্ট খালি।</div>;
   }
-
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <h2 className="text-2xl font-bold mb-4">আপনার অর্ডার</h2>

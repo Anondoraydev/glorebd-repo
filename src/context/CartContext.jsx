@@ -67,9 +67,11 @@ export const CartProvider = ({ children }) => {
         subtotal,
       }}
     >
+      
       {children}
     </CartContext.Provider>
   );
+
 };
 
 export const useCart = () => useContext(CartContext);
