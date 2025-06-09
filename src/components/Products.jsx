@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductCard from './ProductCard';
 
 const Products = () => {
@@ -28,6 +28,7 @@ const Products = () => {
 
   return (
     <div className='max-w-[1520px] mx-auto'>
+       <h2 className="text-2xl md:text-3xl font-semibold text-center mb-6">আমাদের পণ্যসমূহ</h2>
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map(product => (
           <ProductCard key={product._id} product={product} />

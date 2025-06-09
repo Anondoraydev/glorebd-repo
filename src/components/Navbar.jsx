@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import { FaSearch, FaShoppingCart } from "react-icons/fa";
-import { RiMenu2Line } from "react-icons/ri";
-import { GiShoppingBag } from "react-icons/gi";
+import { useEffect, useState } from "react";
 import { AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
-import { useCart } from "../context/CartContext";
+import { FaSearch, FaShoppingCart } from "react-icons/fa";
+import { GiShoppingBag } from "react-icons/gi";
+import { RiMenu2Line } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/logoT.webp";
+import { useCart } from "../context/CartContext";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,24 +17,27 @@ function Navbar() {
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
 
+  // Sticky navbar on scroll (throttled)
   useEffect(() => {
-    const handleScroll = () => {
-      setIsSticky(window.scrollY > 100);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const handleScroll = () => setIsSticky(window.scrollY > 100);
+    const throttled = () => requestAnimationFrame(handleScroll);
+    window.addEventListener("scroll", throttled);
+    return () => window.removeEventListener("scroll", throttled);
   }, []);
 
+  // Cart subtotal
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
+  // Category filtering
   const handleCategoryFilter = (subCategory) => {
     setMenuOpen(false);
     navigate(`/products?subcategory=${encodeURIComponent(subCategory)}`);
   };
 
+  // Search submit
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -48,25 +52,30 @@ function Navbar() {
     <div>
       {/* Navbar */}
       <nav
-        className={`z-50 w-full transition-all duration-300 ${isSticky
-          ? "fixed top-0 left-0 bg-white shadow-md"
-          : "relative bg-transparent"
-          }`}
+        className={`z-50 w-full transition-all duration-300 ${
+          isSticky
+            ? "fixed top-0 left-0 bg-pink-100 shadow-md"
+            : "relative bg-transparent"
+        }`}
       >
         <div className="max-w-[1520px] mx-auto px-4">
           <div className="flex items-center justify-between text-black py-4 relative">
-            {/* Left Icons */}
+            {/* Left */}
             <div className="flex items-center gap-6">
               <div
-                className="flex items-center gap-1 cursor-pointer"
+                role="button"
+                aria-label="Toggle Menu"
                 onClick={() => setMenuOpen(true)}
+                className="flex items-center gap-1 cursor-pointer"
               >
                 <RiMenu2Line className="text-2xl" />
                 <span className="text-sm">Menu</span>
               </div>
               <div
-                className="flex items-center gap-1 cursor-pointer"
+                role="button"
+                aria-label="Toggle Search"
                 onClick={() => setShowSearchInput((prev) => !prev)}
+                className="flex items-center gap-1 cursor-pointer"
               >
                 <FaSearch className="text-xl" />
                 <span className="text-sm">Search</span>
@@ -74,11 +83,17 @@ function Navbar() {
             </div>
 
             {/* Logo */}
-            <Link to={"/"}>
-              <div className="text-2xl font-bold">MyShop</div>
+            <Link to="/">
+              <div className="w-[250px] h-[100px]">
+                <img
+                  src={logo}
+                  alt="GloreBD Logo"
+                  className="w-full h-full object-contain rounded-2xl"
+                />
+              </div>
             </Link>
 
-            {/* Right Icons */}
+            {/* Right */}
             <div className="flex items-center gap-6">
               <Link to="/productPage">
                 <div className="flex items-center gap-1 cursor-pointer">
@@ -87,8 +102,10 @@ function Navbar() {
                 </div>
               </Link>
               <div
-                className="flex items-center gap-1 cursor-pointer relative"
+                role="button"
+                aria-label="Open Cart"
                 onClick={() => setCartOpen(true)}
+                className="flex items-center gap-1 cursor-pointer relative"
               >
                 <FaShoppingCart className="text-2xl" />
                 <span className="text-sm">Cart</span>
@@ -101,19 +118,26 @@ function Navbar() {
             </div>
           </div>
 
-          {/* Search Input Below Logo */}
+          {/* Search Input */}
           {showSearchInput && (
             <form
               onSubmit={handleSearchSubmit}
-              className="mt-5 w-full max-w-xs bg-white border border-gray-300 rounded-md p-2 shadow-sm"
+              className="mt-4 w-full max-w-md mx-auto flex bg-white border rounded-md shadow-sm"
             >
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-grow px-4 py-2 rounded-l-md focus:outline-none"
+                aria-label="Search products"
               />
+              <button
+                type="submit"
+                className="px-4 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
+              >
+                <FaSearch />
+              </button>
             </form>
           )}
         </div>
@@ -121,14 +145,16 @@ function Navbar() {
 
       {/* Sidebar Menu */}
       <div
-        className={`fixed top-0 left-0 h-full w-96 bg-white shadow-md transform transition-transform duration-300 z-50 ${menuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed top-0 left-0 h-full w-96 bg-white shadow-md transform transition-transform duration-300 z-50 ${
+          menuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Menu</h2>
           <button
             onClick={() => setMenuOpen(false)}
             className="text-2xl hover:text-red-500"
+            aria-label="Close menu"
           >
             <AiOutlineClose />
           </button>
@@ -156,9 +182,7 @@ function Navbar() {
               </li>
               <li
                 className="cursor-pointer hover:underline"
-                onClick={() =>
-                  handleCategoryFilter("Unstitched Party Dress")
-                }
+                onClick={() => handleCategoryFilter("Unstitched Party Dress")}
               >
                 Unstitched Party Dress
               </li>
@@ -169,20 +193,22 @@ function Navbar() {
 
       {/* Sidebar Cart */}
       <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-md flex flex-col transition-transform duration-300 z-50 ${cartOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-md flex flex-col transition-transform duration-300 z-50 ${
+          cartOpen ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Cart</h2>
           <button
             onClick={() => setCartOpen(false)}
             className="text-2xl hover:text-red-500"
+            aria-label="Close cart"
           >
             <AiOutlineClose />
           </button>
         </div>
 
-        {/* Cart Items List */}
+        {/* Cart Items */}
         <div className="p-4 space-y-4 overflow-y-auto flex-grow">
           {cartItems.length === 0 ? (
             <p className="text-gray-600">Your cart is empty.</p>
@@ -190,10 +216,7 @@ function Navbar() {
             cartItems.map((item) => (
               <div key={item._id} className="flex items-center gap-4">
                 <img
-                  src={
-                    item.image ||
-                    "https://via.placeholder.com/100x100?text=No+Image"
-                  }
+                  src={item.image || "https://via.placeholder.com/100"}
                   alt={item.name}
                   className="w-full max-w-[100px] h-28 object-cover rounded-md"
                 />
@@ -205,13 +228,17 @@ function Navbar() {
                         updateQuantity(item._id, Math.max(1, item.quantity - 1))
                       }
                       className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
+                      aria-label="Decrease quantity"
                     >
                       −
                     </button>
                     <span className="font-semibold">{item.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                      onClick={() =>
+                        updateQuantity(item._id, item.quantity + 1)
+                      }
                       className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
+                      aria-label="Increase quantity"
                     >
                       +
                     </button>
@@ -222,7 +249,6 @@ function Navbar() {
                 </div>
                 <button
                   onClick={() => removeFromCart(item._id)}
-                  
                   className="ml-2 text-red-600 hover:text-red-800"
                   aria-label="Remove item"
                 >
