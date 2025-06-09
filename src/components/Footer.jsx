@@ -1,8 +1,8 @@
 import {
-    FaFacebookSquare,
-    FaInstagramSquare,
-    FaLinkedin,
-    FaTwitterSquare,
+  FaFacebookSquare,
+  FaInstagramSquare,
+  FaLinkedin,
+  FaTwitterSquare,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Logo from "../assets/logoO.webp";
@@ -57,10 +57,10 @@ const Footer = () => {
               GET IN TOUCH
             </p>
             <p className="text-[20px] hover:text-pink-600">
-              মোবাইল নং: (+88) 01855-375963
+              মোবাইল নং: (+88) 01826339098
             </p>
             <p className="text-[20px] hover:text-pink-600">
-              ইমেইল: hello@glorebd.com
+              ইমেইল: anondo554@gmail.com
             </p>
 
             <div className="flex gap-4 text-[28px] pt-4">
