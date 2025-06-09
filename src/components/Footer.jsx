@@ -65,7 +65,7 @@ const Footer = () => {
 
             <div className="flex gap-4 text-[28px] pt-4">
               <a
-                href="https://www.facebook.com/rifat.jahan.730669"
+                href="https://www.facebook.com/anondo554.0"
                 aria-label="Facebook"
                 title="Facebook"
                 target="_blank"
@@ -74,7 +74,7 @@ const Footer = () => {
                 <FaFacebookSquare className="text-black bg-white rounded hover:text-pink-600" />
               </a>
               <a
-                href="https://www.linkedin.com/in/rifat-jahan-63215b34a/"
+                href="https://www.linkedin.com/in/anondo-ray-7b486b1b4/"
                 aria-label="LinkedIn"
                 title="LinkedIn"
                 target="_blank"
@@ -83,7 +83,7 @@ const Footer = () => {
                 <FaLinkedin className="text-black bg-white rounded hover:text-pink-600" />
               </a>
               <a
-                href="https://x.com/RifatJahanRume"
+                href="https://www.linkedin.com/in/anondo-ray-7b486b1b4/"
                 aria-label="Twitter"
                 title="Twitter"
                 target="_blank"
@@ -92,7 +92,7 @@ const Footer = () => {
                 <FaTwitterSquare className="text-black bg-white rounded hover:text-pink-600" />
               </a>
               <a
-                href="https://www.instagram.com/jahanrifat9531/"
+                href="https://www.instagram.com/anondoray553/?hl=en"
                 aria-label="Instagram"
                 title="Instagram"
                 target="_blank"
